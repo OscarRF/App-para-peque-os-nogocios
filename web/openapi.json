@@ -1,0 +1,987 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SaaS Pequeños Negocios API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/categories/templates": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "List Templates",
+        "description": "List available starter business category templates.",
+        "operationId": "list_templates_api_v1_categories_templates_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TemplateSummaryResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Templates Api V1 Categories Templates Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/categories/templates/apply": {
+      "post": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Apply Template",
+        "description": "Apply a starter business template idempotently to the catalog.",
+        "operationId": "apply_template_api_v1_categories_templates_apply_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplyTemplateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplyTemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/categories/tree": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Get Category Tree",
+        "description": "Return the full nested category tree.",
+        "operationId": "get_category_tree_api_v1_categories_tree_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryNodeResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Get Category Tree Api V1 Categories Tree Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/categories": {
+      "post": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Create Category",
+        "description": "Create a root category or nested subcategory at any level.",
+        "operationId": "create_category_api_v1_categories_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryNodeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Clear Catalog",
+        "description": "Delete all categories for the active tenant.",
+        "operationId": "clear_catalog_api_v1_categories_delete",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearCatalogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/categories/{category_id}": {
+      "patch": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Update Category",
+        "description": "Rename or move a category node while preventing cycles and duplicates.",
+        "operationId": "update_category_api_v1_categories__category_id__patch",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Category Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryNodeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Delete Category",
+        "description": "Delete a leaf category that has no subcategories.",
+        "operationId": "delete_category_api_v1_categories__category_id__delete",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Category Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products/units": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "List Units",
+        "description": "Return available standard integer and fractional measurement units.",
+        "operationId": "list_units_api_v1_products_units_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/UnitOptionResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Units Api V1 Products Units Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "List Products",
+        "description": "List configured products, optionally filtered by category or search term.",
+        "operationId": "list_products_api_v1_products_get",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category Id"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductResponse"
+                  },
+                  "title": "Response List Products Api V1 Products Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Create Product",
+        "description": "Create and configure a catalog product with unit and initial sale price.",
+        "operationId": "create_product_api_v1_products_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products/{product_id}": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Get Product",
+        "description": "Get a single configured product by ID.",
+        "operationId": "get_product_api_v1_products__product_id__get",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Update Product",
+        "description": "Update product configuration (name, category, measurement unit, or sale price).",
+        "operationId": "update_product_api_v1_products__product_id__patch",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health Check",
+        "description": "Liveness check endpoint.",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Check Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApplyTemplateRequest": {
+        "properties": {
+          "template_code": {
+            "$ref": "#/components/schemas/BusinessTemplateCode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "template_code"
+        ],
+        "title": "ApplyTemplateRequest",
+        "description": "Request body for applying a starter template."
+      },
+      "ApplyTemplateResponse": {
+        "properties": {
+          "template_code": {
+            "$ref": "#/components/schemas/BusinessTemplateCode"
+          },
+          "created_count": {
+            "type": "integer",
+            "title": "Created Count"
+          },
+          "skipped_count": {
+            "type": "integer",
+            "title": "Skipped Count"
+          },
+          "tree": {
+            "items": {
+              "$ref": "#/components/schemas/CategoryNodeResponse"
+            },
+            "type": "array",
+            "title": "Tree"
+          }
+        },
+        "type": "object",
+        "required": [
+          "template_code",
+          "created_count",
+          "skipped_count",
+          "tree"
+        ],
+        "title": "ApplyTemplateResponse",
+        "description": "Result of applying a starter template to a business catalog."
+      },
+      "BusinessTemplateCode": {
+        "type": "string",
+        "enum": [
+          "almacen",
+          "botilleria",
+          "comercio_general"
+        ],
+        "title": "BusinessTemplateCode",
+        "description": "Supported starter business template identifiers."
+      },
+      "CategoryCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "parent_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "CategoryCreate",
+        "description": "Input payload for creating a category or subcategory at any level."
+      },
+      "CategoryNodeResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "parent_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Id"
+          },
+          "level": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Level"
+          },
+          "children": {
+            "items": {
+              "$ref": "#/components/schemas/CategoryNodeResponse"
+            },
+            "type": "array",
+            "title": "Children"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "parent_id",
+          "level"
+        ],
+        "title": "CategoryNodeResponse",
+        "description": "Recursive tree representation of a category and its descendants."
+      },
+      "CategoryUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "parent_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Id"
+          }
+        },
+        "type": "object",
+        "title": "CategoryUpdate",
+        "description": "Input payload for renaming or relocating a category node."
+      },
+      "ClearCatalogResponse": {
+        "properties": {
+          "deleted_count": {
+            "type": "integer",
+            "title": "Deleted Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "deleted_count"
+        ],
+        "title": "ClearCatalogResponse",
+        "description": "Result of clearing all categories in a tenant catalog."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ProductCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "category_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Category Id"
+          },
+          "unit_code": {
+            "$ref": "#/components/schemas/StandardUnitCode"
+          },
+          "sale_price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Sale Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "category_id",
+          "unit_code",
+          "sale_price"
+        ],
+        "title": "ProductCreate",
+        "description": "Payload to create and configure a catalog product."
+      },
+      "ProductResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "category_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Category Id"
+          },
+          "category_path": {
+            "type": "string",
+            "title": "Category Path"
+          },
+          "unit_code": {
+            "$ref": "#/components/schemas/StandardUnitCode"
+          },
+          "unit_kind": {
+            "$ref": "#/components/schemas/UnitKind"
+          },
+          "max_decimals": {
+            "type": "integer",
+            "title": "Max Decimals"
+          },
+          "allows_decimals": {
+            "type": "boolean",
+            "title": "Allows Decimals"
+          },
+          "sale_price": {
+            "type": "string",
+            "title": "Sale Price"
+          },
+          "current_stock": {
+            "type": "string",
+            "title": "Current Stock"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category_id",
+          "category_path",
+          "unit_code",
+          "unit_kind",
+          "max_decimals",
+          "allows_decimals",
+          "sale_price",
+          "current_stock"
+        ],
+        "title": "ProductResponse",
+        "description": "Product representation returned by the API."
+      },
+      "ProductUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Id"
+          },
+          "unit_code": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StandardUnitCode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sale_price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sale Price"
+          }
+        },
+        "type": "object",
+        "title": "ProductUpdate",
+        "description": "Payload to update a configured product."
+      },
+      "StandardUnitCode": {
+        "type": "string",
+        "enum": [
+          "unidad",
+          "pack",
+          "kg",
+          "g",
+          "l",
+          "ml"
+        ],
+        "title": "StandardUnitCode",
+        "description": "Supported standard measurement unit codes."
+      },
+      "TemplateSummaryResponse": {
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/BusinessTemplateCode"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "preview_tree": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Preview Tree"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "title",
+          "description",
+          "preview_tree"
+        ],
+        "title": "TemplateSummaryResponse",
+        "description": "Summary and preview tree for a business category template."
+      },
+      "UnitKind": {
+        "type": "string",
+        "enum": [
+          "integer",
+          "fractional"
+        ],
+        "title": "UnitKind",
+        "description": "Classification of how a product quantity is measured."
+      },
+      "UnitOptionResponse": {
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/StandardUnitCode"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/UnitKind"
+          },
+          "max_decimals": {
+            "type": "integer",
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Max Decimals"
+          },
+          "allows_decimals": {
+            "type": "boolean",
+            "title": "Allows Decimals"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "label",
+          "kind",
+          "max_decimals",
+          "allows_decimals"
+        ],
+        "title": "UnitOptionResponse",
+        "description": "Standard unit option with precision rules."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
